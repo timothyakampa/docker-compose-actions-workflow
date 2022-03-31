@@ -6,7 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Get Git Branch
-        run: echo "$(git rev-parse --abbrev-ref HEAD)"
+        run: echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD | sed -r 's/HEAD/pr/g')"
+        id: get_branch
+      - name: Capture image Tag
+        run: |
+          echo "${{ steps.get_branch.outputs.branch }}"
       # - name: Build the stack
       #   run: docker-compose up -d
       # - name: Test
